@@ -123,6 +123,14 @@ public abstract class ChunkAccessMixin implements ExtendedChunk {
 
     @Unique
     public boolean scalablelux$usingStarlight() {
-        return this.levelHeightAccessor instanceof BlockAndLightGetter getter && getter.getLightEngine() instanceof StarLightLightingProvider starLightLightingProvider;
+        if (!(this.levelHeightAccessor instanceof BlockAndLightGetter getter)) {
+            return false;
+        }
+        try {
+            var lightEngine = getter.getLightEngine();
+            return lightEngine instanceof StarLightLightingProvider;
+        } catch (NullPointerException e) {
+            return false;
+        }
     }
 }
